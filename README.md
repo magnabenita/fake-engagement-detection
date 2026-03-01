@@ -16,6 +16,49 @@ Unlike traditional rule-based approaches, the system models **how users behave o
 
 ---
 
+## Dataset
+
+**Dataset type:** Synthetic  
+**Reason for synthetic data:** No publicly available dataset provides realistic, labeled *behavioural engagement + coordinated co-engagement windows* needed to model bot rings safely and ethically. Synthetic simulation allows controlled, reproducible experimentation without privacy risks.
+
+### How the dataset was generated (simulation process)
+We simulated a social platform with posts and three user groups:
+
+1. **Organic users**  
+   - Irregular activity and varied engagement volume  
+   - Diverse natural comments  
+   - Random timestamps within the event window
+
+2. **Random bots (non-coordinated)**  
+   - Highly regular timing (fixed gaps: 45–180 sec with small noise)  
+   - Templated comments (short repeated phrases)  
+   - Mostly web-based device usage
+
+3. **Coordinated bot rings**  
+   - Users grouped into rings (multiple accounts per ring)  
+   - Coordinated bursts: many accounts engage the same post within ±2 minutes  
+   - Additional filler behaviour to mimic realistic mixed activity
+
+### Dataset size (your run)
+- **Users:** 392 (260 organic + 60 bots + 72 coordinated bots)  
+- **Posts:** 120  
+- **Event window:** 7 days  
+- **Records (events):** (paste the printed `Events: XXXX` from your notebook)
+
+### Event schema (columns)
+Each record contains:  
+`event_id, user_id, post_id, event_type (like/comment/share), timestamp, comment_text (if comment), device, ip_hash`
+
+### Behavioural features engineered from events
+- Timing regularity (mean gap, std gap, CV of gaps)
+- Burst behaviour (events/hour, spike ratio)
+- Engagement ratios (like/comment/share ratios)
+- Repeat-post behaviour (repeat_post_ratio)
+- Text repetition (TF-IDF similarity, lexical diversity proxy)
+- Coordination (co-engagement hits within short time window; DBSCAN clusters; network graph)
+
+---
+
 ## 🧠 Methodology Overview
 
 ### 1. Data Simulation
